@@ -5,11 +5,15 @@ import net.blay09.mods.waystones.WaystoneManager;
 import net.blay09.mods.waystones.Waystones;
 import net.blay09.mods.waystones.block.TileWaystone;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class RenderWaystone extends TileEntitySpecialRenderer {
 
@@ -31,6 +35,8 @@ public class RenderWaystone extends TileEntitySpecialRenderer {
 		GL11.glRotatef(angle, 0f, 1f, 0f);
 		GL11.glRotatef(-180f, 1f, 0f, 0f);
 		GL11.glScalef(0.5f, 0.5f, 0.5f);
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		model.renderAll();
 		if(tileWaystone.hasWorldObj() && WaystoneManager.getKnownWaystone(tileWaystone.getWaystoneName()) != null || WaystoneManager.getServerWaystone(tileWaystone.getWaystoneName()) != null) {
 			bindTexture(textureActive);
@@ -41,9 +47,11 @@ public class RenderWaystone extends TileEntitySpecialRenderer {
 			}
 			model.renderPillar();
 			if(!WaystoneConfig.disableTextGlow) {
+				GL11.glEnable(GL11.GL_LIGHTING);
 				Minecraft.getMinecraft().entityRenderer.enableLightmap(0);
 			}
 		}
+		GL11.glDisable(GL_BLEND);
 		GL11.glPopMatrix();
 	}
 }
