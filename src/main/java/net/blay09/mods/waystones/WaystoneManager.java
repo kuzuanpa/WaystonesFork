@@ -7,6 +7,7 @@ import net.blay09.mods.waystones.network.message.MessageTeleportEffect;
 import net.blay09.mods.waystones.network.message.MessageWaystones;
 import net.blay09.mods.waystones.network.NetworkHandler;
 import net.blay09.mods.waystones.util.BlockPos;
+import net.blay09.mods.waystones.util.TeleporterNoPortalSeekBlock;
 import net.blay09.mods.waystones.util.WaystoneEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -140,7 +141,7 @@ public class WaystoneManager {
         sendTeleportEffect(player.worldObj, new BlockPos(player));
         player.addPotionEffect(new PotionEffect(Potion.blindness.getId(), 20, 3));
         if (dimensionWarp) {
-            player.travelToDimension(waystone.getDimensionId());
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player,  waystone.getDimensionId() , new TeleporterNoPortalSeekBlock(net.minecraftforge.common.DimensionManager.getWorld(waystone.getDimensionId())));
         }
         player.rotationYaw = getRotationYaw(facing);
         player.setPositionAndUpdate(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5);
